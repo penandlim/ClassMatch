@@ -36,7 +36,7 @@ class Users(db.Model):
 class Courses(db.Model):
 	course = db.StringProperty(required = True)
 	mods_monday = db.StringProperty(required = False)
-	mods_tuesday = db.StringProperty(required = False) 
+	mods_tuesday = db.StringProperty(required = False)
 	mods_wed = db.StringProperty(required = False)
 	mods_thursday = db.StringProperty(required = False)
 	mods_friday = db.StringProperty(required = False)
@@ -86,7 +86,7 @@ def get_user(email, cached = True):
 
 def get_name(email, cached=True):
 	'''Gets name from db from email'''
-	return get_user(email, cached).name
+        return get_user(email, cached).name
 
 def check_login(email, password):
 	"""Checks if login info is correct
@@ -129,7 +129,7 @@ def change_email(previous_email, new_email):
 	"""
 	if new_email == '':
 		return [False, 'No email entered']
-	if not EMAIL_RE.match(new_email + "@bergen.org"):
+	if not EMAIL_RE.match(new_email + "@student.rih.org"):
 		return [False, "That's not a valid email."]
 
 	user = get_user(previous_email)
@@ -202,7 +202,7 @@ def signup(email='', password='', verify='', agree='', name=''):
 	if name == '':
 		to_return['name'] = "Please enter your name."
 
-	if not EMAIL_RE.match(email + "@bergen.org") and email != '':
+	if not EMAIL_RE.match(email + "@student.rih.org") and email != '':
 		to_return['email'] = "That's not a valid email."
 	elif not unique_email(email):
 		to_return['email'] = "Email already exits!"
@@ -230,8 +230,8 @@ def email_verification(email, name):
 	link, dellink = get_unique_link(email)
 	body, html = make_activation_email(email, link, dellink, name)
 	try:
-		mail.send_mail(sender="ClassMatch <classmatch.verify@gmail.com>",
-						to="%s <%s>" % (name, email + "@bergen.org"),
+		mail.send_mail(sender="RamapoClassMatch <ramapoclassmatch@gmail.com>",
+						to="%s <%s>" % (name, email + "@student.rih.org"),
 						subject="Email Verification",
 						body=body,
 						html=html)
@@ -243,7 +243,7 @@ def get_unique_link(email):
 	reset_user_link(email)
 	link_row = Email_Verification(email = email)
 	link_row.put()
-	return 'http://class-match.appspot.com/verify/' + str(link_row.key()), 'http://class-match.appspot.com/delete_email/' + str(link_row.key())
+	return 'http://ramapoclass.appspot.com/verify/' + str(link_row.key()), 'http://ramapoclass.appspot.com/delete_email/' + str(link_row.key())
 
 def reset_user_link(email):
 	'''Deletes email verification links for user'''
@@ -327,7 +327,7 @@ def make_activation_email(email, link, ignore_link, name):
 def get_classes(email, cached=True):
 	courses = memcache.get('courses-' + email)
 	if courses and cached:
-		logging.info('CACHE GET_CLASSES: ' + email)
+		logging.info('CACHE get_classes: ' + email)
 		return courses
 	else:
 		logging.info('DB GET_CLASSES: ' + email)
@@ -352,7 +352,10 @@ def remove_user_course(email,course_name):
 	course = db.GqlQuery("SELECT * FROM Schedule WHERE unique_id = :email and course = :course_name LIMIT 1", email = email, course_name = course_name).get()
 	course_from_Courses = Courses.get(course.course_id)
 	course_from_Courses.students_enrolled.remove(get_name(email))
-	course_from_Courses.put()
+	if not course_from_Courses.students_enrolled:
+                course_from_Courses.delete()
+        else:
+                course_from_Courses.put()
 	course.delete()
 	# user_courses = []
 	# for people in peoples_classes:
@@ -380,22 +383,22 @@ def get_courses_list():
 
 def get_all_courses():
 	'''Get all courses'''
-	lst = memcache.get('all_courses')
-	if not lst:
-		all_users = db.GqlQuery("SELECT * FROM Courses")
-		courses = []
-		for i in all_users:
-			# i.course = i.course.encode('utf-8')
-			notIn = True
-			for c in courses:
-				if i.course.lower().strip() == c.lower().strip():
-					notIn = False
-					break
-			if notIn:
-				courses.append(i.course)
-		memcache.set('all_courses', courses)
-		return courses
-	return lst
+	#lst = memcache.get('all_courses')
+	#if not lst:
+        all_users = db.GqlQuery("SELECT * FROM Courses")
+        courses = []
+        for i in all_users:
+                # i.course = i.course.encode('utf-8')
+                notIn = True
+                for c in courses:
+                        if i.course.lower().strip() == c.lower().strip():
+                                notIn = False
+                                break
+                if notIn:
+                        courses.append(i.course)
+        memcache.set('all_courses', courses)
+        return courses
+	#return lst
 
 def get_course_id(course, mods_monday, mods_tuesday, mods_wed, mods_thursday, mods_friday, email):
 	retrieved_course = db.GqlQuery("SELECT * FROM Courses\

@@ -116,18 +116,21 @@ class BaseHandler(webapp2.RequestHandler):
 		user_courses = get_classes(email)
 		people_in_class = {}
 		name = get_name(email)
-		for i in user_courses:
-			from_courses = Courses.get(i.course_id)
-			x = from_courses.students_enrolled
-			if name in x:
-				x.remove(name)
-			x = self.remove_duplicates(x)
-			if len(x) == 0:
-				continue
-			stri = ''
-			for student in x:
-				stri += student + ", "
-			people_in_class[i.course] = stri[:len(stri) - 2]
+                for i in user_courses:
+                        from_courses = Courses.get(i.course_id)
+                        if from_courses:
+                                x = from_courses.students_enrolled
+                                x = self.remove_duplicates(x)
+                                if len(x) == 0:
+                                        continue
+                                stri = ''
+                                for student in x:
+                                        if student == name:
+                                                student = name + " (You)"
+                                        if student == "John Lim":
+                                                student = jinja2.Markup('<i>John Lim</i>')
+                                        stri += student + ", "
+                                people_in_class[i.course] = stri[:len(stri) - 2]
 		return people_in_class
 		# peoples_classes = db.GqlQuery("SELECT * FROM Schedule ORDER BY course DESC")
 		# user_courses = get_classes(self.get_email())
@@ -157,8 +160,8 @@ class SigninHandler(BaseHandler):
 		email = self.rget('email')
 		
 		email = email.lower()
-		if "@bergen.org" in email:
-			email = email.replace("@bergen.org","")
+		if "@student.rih.org" in email:
+			email = email.replace("@student.rih.org","")
 
 		blocked_time = memcache.get('loginblock-'+email)
 		if blocked_time and (datetime.datetime.now() - blocked_time < datetime.timedelta(minutes=1)):
@@ -201,8 +204,8 @@ class SignupHandler(BaseHandler):
 		
 		email = self.rget('email')
 		email = email.lower()
-		if "@bergen.org" in email:
-			email = email.replace("@bergen.org","")
+		if "@student.rih.org" in email:
+			email = email.replace("@student.rih.org","")
 		# result = signup(email = email, password = self.rget('password'), verify = self.rget('verify'), agree = self.rget('agree'), name = self.rget('name'))
 		result = signup(email = email, password = self.rget('password'), verify = self.rget('verify'), agree = 'on', name = self.rget('name'))
 		if result['success']:
@@ -345,6 +348,8 @@ class Submit(BaseHandler):
 				s.put()
 				course_to_add = Courses.get(course_id)
 				course_to_add.students_enrolled.append(get_name(email))
+				if email in course_to_add.students_enrolled:
+                                        course_to_add.students_enrolled.remove(email)
 				course_to_add.put()
 			else:
 				break

@@ -1,38 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Signup{% endblock %}
 {% block content %}
-<div class="hero-unit" style="text-align: center;">
+<div class="jumbotron" style="text-align: center;">
 	<h1>Sign Up</h1>
-	<hr/>
+	<hr>
 	<form method="post">
 		<div class="row">
-			<div class="span2">&nbsp;</div>
-			<div class="span2" style="text-align:right;">Email</div>
-			<div class="span4" style="text-align:left;">
+			<div class="col-sm-5 col-lg-5" style="text-align:right;">Email</div>
+			<div class="col-sm-7 col-lg-7" style="text-align:left;">
 				<div class="input-append">
-					<input type="text" name="email" placeholder={% if email_error %}"{{email_error}}"{% else %}"jarzon"{% endif %}>
-					<span class="add-on">@bergen.org</span>
+					<input type="text" name="email" placeholder={%if  email_error %}"{{email_error}}"{% else %}" jongseung.lim"{% endif %}>
+					<span class="add-on">@student.rih.org</span>
 				</div>
 			</div>
-			<div class="span2">&nbsp;</div>
 		</div>
+		<br>
 		<div class="row">
-			<div class="span2">&nbsp;</div>
-			<div class="span2" style="text-align:right;">Full Name</div>
-			<div class="span4" style="text-align:left;"><input type="text" name="name" placeholder={% if name_error %}"{{name_error}}"{% endif %}></div>
-			<div class="span2">&nbsp;</div>
+			<div class="col-sm-5 col-lg-5" style="text-align:right;">Full Name</div>
+			<div class="col-sm-7 col-lg-7" style="text-align:left;"><input type="text" name="name" placeholder={% if name_error %}"{{name_error}}"{% else %}" John Lim"{% endif %}></div>
 		</div>
+		<br>
 		<div class="row">
-			<div class="span2">&nbsp;</div>
-			<div class="span2" style="text-align:right;">Password</div>
-			<div class="span4" style="text-align:left;"><input type="password" name="password" {% if password_error %}placeholder="{{password_error}}"{% endif %}></div>
-			<div class="span2">&nbsp;</div>
+			<div class="col-sm-5 col-lg-5" style="text-align:right;">Password</div>
+			<div class="col-sm-7 col-lg-7" style="text-align:left;"><input type="password" name="password" {% if  password_error %}placeholder="{{password_error}}"{% endif  %}></div>
 		</div>
+		<br>
 		<div class="row">
-			<div class="span2">&nbsp;</div>
-			<div class="span2" style="text-align:right;">Verify Password</div>
-			<div class="span4" style="text-align:left;"><input type="password" name="verify"></div>
-			<div class="span2">&nbsp;</div>
+			<div class="col-sm-5 col-lg-5" style="text-align:right;">Verify Password</div>
+			<div class="col-sm-7 col-lg-7" style="text-align:left;"><input type="password" name="verify"></div>
 		</div>
 		<!-- <div class="row">
 			<label><div class="span2">&nbsp;</div>
@@ -40,7 +35,7 @@
 			<div class="span4" style="text-align:left;">I agree to the Terms of Service</div>
 			<div class="span2">&nbsp;</div></label>
 		</div> -->
-		<br/>
+		<br>
 		<input type="submit" class="btn btn-success btn-large">
 	</form>
 </div>

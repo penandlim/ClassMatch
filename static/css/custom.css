@@ -3,6 +3,15 @@ html, body {
 	padding: 0;
 }
 
+body{
+padding-top: 10px;
+background: url(http://wallpoper.com/images/00/32/04/19/alone-school_00320419.png) no-repeat center center fixed; 
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+}
+
 .wrapper {
 	min-height: 100%;
 	height: auto !important;
@@ -24,4 +33,60 @@ html, body {
 
 .sticky-footer a  {
     color: rgb(44, 62, 80);
+}
+
+.jumbotron {
+  background-color: rgba(255,255,255, 0.75);
+  color: inherit;
+}
+
+.navbar
+{
+background-color: rgba(255,255,255, 0.75);
+color: inherit;
+}
+
+.navbar-nav > li > a {padding-top:7px !important; padding-bottom:5px !important;}
+.navbar {min-height:25px}
+
+
+
+
+.tt-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+.tt-suggestion > p {
+  margin-bottom: 0px;
+  font-size: 13px;
+  display: block;
+  padding: 3px 10px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+  color: #333333;
+  white-space: nowrap;
+}
+.tt-suggestion > p:hover,
+.tt-suggestion > p:focus,
+.tt-suggestion.tt-cursor p {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #428bca;
 }

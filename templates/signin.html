@@ -1,29 +1,27 @@
-{% extends "base.html" %}
+<!doctype html>
+<html><head></head><body>{% extends "base.html" %}
 {% block title %}Signin{% endblock %}
 {% block content %}
-<div class="hero-unit" style="text-align: center;">
+<div class="jumbotron" style="text-align: center;">
 	<h1>Sign In</h1>
-	<hr/>
+	<hr>
 	<form method="post">
 		<div class="row">
-			<div class="span2">&nbsp;</div>
-			<div class="span2" style="text-align:right;">Email</div>
-			<div class="span4" style="text-align:left;">
+			<div class="col-sm-4 col-lg-4" style="text-align:right;">Email</div>
+			<div class="col-sm-6 col-lg-6" style="text-align:left;">
 				<div class="input-append">
-					<input type="text" name="email" placeholder="jarzon">
-					<span class="add-on">@bergen.org</span>
+					<input type="text" name="email" placeholder="jongseung.lim">
+					<span class="add-on">@student.rih.org</span>
 				</div>
 			</div>
-			<div class="span2">&nbsp;</div>
 		</div>
+		<br>
 		<div class="row">
-			<div class="span2">&nbsp;</div>
-			<div class="span2" style="text-align:right;">Password</div>
-			<div class="span4" style="text-align:left;"><input type="password" name="password"></div>
-			<div class="span2">&nbsp;</div>
+			<div class="col-sm-4 col-lg-4" style="text-align:right;">Password</div>
+			<div class="col-sm-6 col-lg-6" style="text-align:left;"><input type="password" name="password"></div>
 		</div>
-		<br/>
+		<br>
 		<input type="submit" class="btn btn-success btn-large">
 	</form>
 </div>
-{% endblock %}
+{% endblock %}</body></html>
