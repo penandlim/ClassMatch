@@ -126,9 +126,9 @@ class BaseHandler(webapp2.RequestHandler):
                                 stri = ''
                                 for student in x:
                                         if student == name:
-                                                student = name + " (You)"
-                                        if student == "John Lim":
-                                                student = jinja2.Markup('<i>John Lim</i>')
+                                                student = name + "(You)"
+                                        elif student == "Jongseung Lim" or student == "John Lim":
+                                                student = jinja2.Markup('''<a href="https://www.facebook.com/john.lim.1069">John Lim</a>''')
                                         stri += student + ", "
                                 people_in_class[i.course] = stri[:len(stri) - 2]
 		return people_in_class
@@ -138,7 +138,7 @@ class BaseHandler(webapp2.RequestHandler):
 		# for people in peoples_classes:
 		# 	for user_course in user_courses:
 		# 		if user_course.course.strip().lower() == people.course.strip().lower() and self.get_email() != people.unique_id:
-		# 			if (user_course.mods_monday == people.mods_monday and user_course.mods_tuesday == people.mods_tuesday and 
+		# 			if (user_course.dayA == people.dayA and user_course.dayB == people.dayB and 
 		# 				user_course.mods_wed == people.mods_wed and user_course.mods_thursday == people.mods_thursday and
 		# 				user_course.mods_friday == people.mods_friday):
 		# 				logging.error(people.unique_id)
@@ -242,11 +242,12 @@ class Schedule(db.Model):
 	unique_id = db.StringProperty(required = False)
 	course = db.StringProperty(required = True)
 	teacher = db.StringProperty(required=False)
-	mods_monday = db.StringProperty(required = False)
-	mods_tuesday = db.StringProperty(required = False) 
-	mods_wed = db.StringProperty(required = False)
-	mods_thursday = db.StringProperty(required = False)
-	mods_friday = db.StringProperty(required = False)
+        course_vague_name = db.StringProperty(required=False)
+	dayA = db.StringProperty(required = False)
+	dayB = db.StringProperty(required = False) 
+#	mods_wed = db.StringProperty(required = False)
+#	mods_thursday = db.StringProperty(required = False)
+#	mods_friday = db.StringProperty(required = False)
 	course_id = db.StringProperty(required = False)
 
 class AccountHandler(BaseHandler):
@@ -313,16 +314,16 @@ class Submit(BaseHandler):
 			#peoples_classes = db.GqlQuery("SELECT * FROM Schedule ORDER BY course DESC")
 			user_courses = get_classes(self.get_email())
 			for course in user_courses:
-				if course.mods_monday == '':
-					course.mods_monday = 'None'
-				if course.mods_tuesday == '':
-					course.mods_tuesday = 'None'
-				if course.mods_wed == '':
-					course.mods_wed = 'None'
-				if course.mods_thursday == '':
-					course.mods_thursday = 'None'
-				if course.mods_friday == '':
-					course.mods_friday = 'None'
+				if course.dayA == '':
+					course.dayA = 'None'
+				if course.dayB == '':
+					course.dayB = 'None'
+				# if course.mods_wed == '':
+				#	course.mods_wed = 'None'
+				# if course.mods_thursday == '':
+				#	course.mods_thursday = 'None'
+				# if course.mods_friday == '':
+				#	course.mods_friday = 'None'
 			self.render_page(user_courses=user_courses)
 		else:
 			self.redirect('/signin')
@@ -332,19 +333,21 @@ class Submit(BaseHandler):
 		while True:
 			course = self.request.get("course" + str(q)).strip()
 			teacher = self.request.get("teacher"+ str(q)).strip()
-			mods_monday = self.request.get("monday" + str(q)).strip()
-			mods_tuesday = self.request.get("tuesday" + str(q)).strip()
-			mods_wed = self.request.get("wednesday" + str(q)).strip()
-			mods_thursday = self.request.get("thursday" + str(q)).strip()
-			mods_friday = self.request.get("friday" + str(q)).strip()
+			dayA = self.request.get("Aday" + str(q)).strip()
+			dayB = self.request.get("Bday" + str(q)).strip()
+			course_vague_name = self.request.get("vaguename" + str(q)).strip()
+                        # mods_wed = self.request.get("wednesday" + str(q)).strip()
+			# mods_thursday = self.request.get("thursday" + str(q)).strip()
+			# mods_friday = self.request.get("friday" + str(q)).strip()
 			if q == '':
 				q = 2
 			else:
 				q += 1
 			if course:
-				course_id = get_course_id(course, mods_monday, mods_tuesday, mods_wed, mods_thursday, mods_friday, email)
-				s = Schedule(unique_id=email , course=course,teacher=teacher,mods_monday=mods_monday,mods_tuesday=mods_tuesday,
-					mods_wed=mods_wed,mods_thursday = mods_thursday,mods_friday=mods_friday,course_id=course_id)
+				course_id = get_course_id(course, dayA, dayB, email) 
+                                # deleted mods_wed mods_thursday mods_friday
+				s = Schedule(unique_id=email , course=course,teacher=teacher,course_vague_name=course_vague_name,dayA=dayA,dayB=dayB,course_id=course_id) 
+                                # deleted mods_wed mods_thursday mods_friday
 				s.put()
 				course_to_add = Courses.get(course_id)
 				course_to_add.students_enrolled.append(get_name(email))

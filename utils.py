@@ -35,11 +35,11 @@ class Users(db.Model):
 
 class Courses(db.Model):
 	course = db.StringProperty(required = True)
-	mods_monday = db.StringProperty(required = False)
-	mods_tuesday = db.StringProperty(required = False)
-	mods_wed = db.StringProperty(required = False)
-	mods_thursday = db.StringProperty(required = False)
-	mods_friday = db.StringProperty(required = False)
+	dayA = db.StringProperty(required = False)
+	dayB = db.StringProperty(required = False) 
+	# mods_wed = db.StringProperty(required = False)
+	# mods_thursday = db.StringProperty(required = False)
+	# mods_friday = db.StringProperty(required = False)
 	students_enrolled = db.StringListProperty(required = True)
 
 GET_USER = db.GqlQuery("SELECT * FROM Users WHERE email = :email LIMIT 1")
@@ -400,30 +400,29 @@ def get_all_courses():
         return courses
 	#return lst
 
-def get_course_id(course, mods_monday, mods_tuesday, mods_wed, mods_thursday, mods_friday, email):
+def get_course_id(course, dayA, dayB, email): 
+    # deleted mods_wed mods_thursday mods_friday
 	retrieved_course = db.GqlQuery("SELECT * FROM Courses\
 						WHERE course = :course\
-						AND mods_monday = :mods_monday\
-						AND mods_tuesday = :mods_tuesday\
-						AND mods_wed = :mods_wed\
-						AND mods_thursday = :mods_thursday\
-						AND mods_friday = :mods_friday\
+						AND dayA = :dayA\
+						AND dayB = :dayB\
 						LIMIT 1",
 						course = course,
-						mods_monday = mods_monday,
-						mods_tuesday = mods_tuesday,
-						mods_wed = mods_wed,
-						mods_thursday = mods_thursday,
-						mods_friday = mods_friday).get()
+						dayA = dayA,
+						dayB = dayB).get()
+						# mods_wed = mods_wed,
+						# mods_thursday = mods_thursday,
+						# mods_friday = mods_friday
+                        
 	to_return = ''
 	if retrieved_course is None:
 		logging.error(course)
 		c = Courses(course = course,
-					mods_monday = mods_monday,
-					mods_tuesday = mods_tuesday,
-					mods_wed = mods_wed,
-					mods_thursday = mods_thursday,
-					mods_friday = mods_friday,
+					dayA = dayA,
+					dayB = dayB,
+					# mods_wed = mods_wed,
+					# mods_thursday = mods_thursday,
+					# mods_friday = mods_friday,
 					students_enrolled = [email])
 		c.put()
 		to_return = str(c.key())
